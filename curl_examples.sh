@@ -1,0 +1,820 @@
+#!/bin/bash
+# Queensland Will Generator - Curl Examples
+
+# Base URL
+BASE_URL="http://localhost:5000"
+
+# ============================================
+# 1. VALIDATE PAYLOAD
+# ============================================
+
+echo "=== Validating Will Payload ==="
+curl -X POST "${BASE_URL}/api/validate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eligibility": {
+      "confirm_age_over_18": true,
+      "confirm_qld": true,
+      "confirm_not_legal_advice": true
+    },
+    "will_maker": {
+      "full_name": "John Michael Smith",
+      "dob": "1980-03-15",
+      "occupation": "Software Engineer",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "john.smith@email.com",
+      "phone": "0412 345 678",
+      "relationship_status": "married"
+    },
+    "partner": {
+      "full_name": "Sarah Jane Smith",
+      "dob": "1982-07-22",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "sarah.smith@email.com",
+      "phone": "0413 456 789"
+    },
+    "has_children": true,
+    "children": [
+      {
+        "id": "child_0",
+        "full_name": "Emily Rose Smith",
+        "dob": "2010-05-10",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": true,
+        "special_needs": false
+      },
+      {
+        "id": "child_1",
+        "full_name": "James William Smith",
+        "dob": "2005-11-28",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": false,
+        "special_needs": false
+      }
+    ],
+    "dependants": {
+      "has_other_dependants": false,
+      "other_dependants": []
+    },
+    "executors": {
+      "mode": "partner_only",
+      "backup": {
+        "mode": "one",
+        "list": [
+          {
+            "id": "backup_executor_0",
+            "full_name": "Robert Thomas Wilson",
+            "relationship": "Brother-in-law",
+            "address": {
+              "street": "15 Maple Street",
+              "suburb": "Indooroopilly",
+              "state": "QLD",
+              "postcode": "4068"
+            },
+            "phone": "0414 567 890",
+            "email": "rob.wilson@email.com"
+          }
+        ]
+      }
+    },
+    "guardianship": {
+      "appoint_guardian": true,
+      "guardian": {
+        "full_name": "Margaret Anne Wilson",
+        "relationship": "Sister",
+        "address": {
+          "street": "23 Oak Avenue",
+          "suburb": "Paddington",
+          "state": "QLD",
+          "postcode": "4064"
+        },
+        "phone": "0415 678 901"
+      },
+      "backup_guardian": {
+        "full_name": "David Charles Brown",
+        "relationship": "Uncle",
+        "address": {
+          "street": "78 Pine Road",
+          "suburb": "Ashgrove",
+          "state": "QLD",
+          "postcode": "4060"
+        }
+      }
+    },
+    "distribution": {
+      "scheme": "specific_gifts_then_residue"
+    },
+    "beneficiaries": [
+      {
+        "id": "beneficiary_0",
+        "type": "individual",
+        "full_name": "Emily Rose Smith",
+        "relationship": "Daughter",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_cash",
+        "cash_amount": 25000
+      },
+      {
+        "id": "beneficiary_1",
+        "type": "individual",
+        "full_name": "James William Smith",
+        "relationship": "Son",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_item",
+        "item_description": "vintage watch collection"
+      },
+      {
+        "id": "beneficiary_2",
+        "type": "individual",
+        "full_name": "Sarah Jane Smith",
+        "relationship": "Wife",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "residue",
+        "residue_share_percent": 100
+      }
+    ],
+    "survivorship": {
+      "days": 30
+    },
+    "substitution": {
+      "rule": "to_their_children"
+    },
+    "minor_trusts": {
+      "enabled": true,
+      "vesting_age": 21,
+      "trustee_mode": "executors_as_trustees"
+    },
+    "toggles": {
+      "funeral": {
+        "enabled": true,
+        "preference": "cremation",
+        "notes": "Simple ceremony with family only"
+      },
+      "digital_assets": {
+        "enabled": true,
+        "authority": true,
+        "categories": ["email", "social_media", "cloud_storage"],
+        "instructions_location": "Password manager under Digital Assets folder"
+      },
+      "pets": {
+        "enabled": true,
+        "count": 2,
+        "summary": "Two golden retrievers named Max and Bella",
+        "care_person_mode": "select_beneficiary",
+        "care_beneficiary_id": "beneficiary_2",
+        "cash_gift": 5000
+      },
+      "business": {
+        "enabled": true,
+        "interests": [
+          {
+            "id": "business_0",
+            "interest_type": "company_shareholding",
+            "entity_name": "Smith Technologies Pty Ltd",
+            "acn": "123456789",
+            "abn": "12123456789",
+            "recipient_mode": "select_beneficiary",
+            "recipient_id": "beneficiary_2"
+          }
+        ]
+      },
+      "exclusion": {
+        "enabled": true,
+        "exclusions": [
+          {
+            "id": "exclusion_0",
+            "person_name": "Thomas Edward Smith",
+            "category": "child",
+            "reasons": ["estrangement"]
+          }
+        ]
+      },
+      "life_sustaining": {
+        "enabled": true,
+        "template": "comfort_and_dignity_prioritised",
+        "values": ["comfort", "dignity", "avoid_burdensome_treatment"]
+      }
+    },
+    "assets": {
+      "real_property": 850000,
+      "bank": 125000,
+      "superannuation": 420000,
+      "investments": 180000,
+      "vehicles": 45000,
+      "business": 350000,
+      "other": 25000
+    },
+    "declarations": {
+      "confirm_reviewed": true,
+      "confirm_complex_advice": true,
+      "confirm_super_and_joint": true,
+      "confirm_signing_witness": true,
+      "intended_signing_date": "2024-02-15"
+    }
+  }'
+
+echo ""
+echo ""
+
+# ============================================
+# 2. GENERATE WILL PDF (Download)
+# ============================================
+
+echo "=== Generating Will PDF (Download) ==="
+curl -X POST "${BASE_URL}/api/generate" \
+  -H "Content-Type: application/json" \
+  -o "Last_Will_and_Testament.pdf" \
+  -d '{
+    "eligibility": {
+      "confirm_age_over_18": true,
+      "confirm_qld": true,
+      "confirm_not_legal_advice": true
+    },
+    "will_maker": {
+      "full_name": "John Michael Smith",
+      "dob": "1980-03-15",
+      "occupation": "Software Engineer",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "john.smith@email.com",
+      "phone": "0412 345 678",
+      "relationship_status": "married"
+    },
+    "partner": {
+      "full_name": "Sarah Jane Smith",
+      "dob": "1982-07-22",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "sarah.smith@email.com",
+      "phone": "0413 456 789"
+    },
+    "has_children": true,
+    "children": [
+      {
+        "id": "child_0",
+        "full_name": "Emily Rose Smith",
+        "dob": "2010-05-10",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": true,
+        "special_needs": false
+      },
+      {
+        "id": "child_1",
+        "full_name": "James William Smith",
+        "dob": "2005-11-28",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": false,
+        "special_needs": false
+      }
+    ],
+    "dependants": {
+      "has_other_dependants": false,
+      "other_dependants": []
+    },
+    "executors": {
+      "mode": "partner_only",
+      "backup": {
+        "mode": "one",
+        "list": [
+          {
+            "id": "backup_executor_0",
+            "full_name": "Robert Thomas Wilson",
+            "relationship": "Brother-in-law",
+            "address": {
+              "street": "15 Maple Street",
+              "suburb": "Indooroopilly",
+              "state": "QLD",
+              "postcode": "4068"
+            },
+            "phone": "0414 567 890",
+            "email": "rob.wilson@email.com"
+          }
+        ]
+      }
+    },
+    "guardianship": {
+      "appoint_guardian": true,
+      "guardian": {
+        "full_name": "Margaret Anne Wilson",
+        "relationship": "Sister",
+        "address": {
+          "street": "23 Oak Avenue",
+          "suburb": "Paddington",
+          "state": "QLD",
+          "postcode": "4064"
+        },
+        "phone": "0415 678 901"
+      },
+      "backup_guardian": {
+        "full_name": "David Charles Brown",
+        "relationship": "Uncle",
+        "address": {
+          "street": "78 Pine Road",
+          "suburb": "Ashgrove",
+          "state": "QLD",
+          "postcode": "4060"
+        }
+      }
+    },
+    "distribution": {
+      "scheme": "specific_gifts_then_residue"
+    },
+    "beneficiaries": [
+      {
+        "id": "beneficiary_0",
+        "type": "individual",
+        "full_name": "Emily Rose Smith",
+        "relationship": "Daughter",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_cash",
+        "cash_amount": 25000
+      },
+      {
+        "id": "beneficiary_1",
+        "type": "individual",
+        "full_name": "James William Smith",
+        "relationship": "Son",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_item",
+        "item_description": "vintage watch collection"
+      },
+      {
+        "id": "beneficiary_2",
+        "type": "individual",
+        "full_name": "Sarah Jane Smith",
+        "relationship": "Wife",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "residue",
+        "residue_share_percent": 100
+      }
+    ],
+    "survivorship": {
+      "days": 30
+    },
+    "substitution": {
+      "rule": "to_their_children"
+    },
+    "minor_trusts": {
+      "enabled": true,
+      "vesting_age": 21,
+      "trustee_mode": "executors_as_trustees"
+    },
+    "toggles": {
+      "funeral": {
+        "enabled": true,
+        "preference": "cremation",
+        "notes": "Simple ceremony with family only"
+      },
+      "digital_assets": {
+        "enabled": true,
+        "authority": true,
+        "categories": ["email", "social_media", "cloud_storage"],
+        "instructions_location": "Password manager under Digital Assets folder"
+      },
+      "pets": {
+        "enabled": true,
+        "count": 2,
+        "summary": "Two golden retrievers named Max and Bella",
+        "care_person_mode": "select_beneficiary",
+        "care_beneficiary_id": "beneficiary_2",
+        "cash_gift": 5000
+      },
+      "business": {
+        "enabled": true,
+        "interests": [
+          {
+            "id": "business_0",
+            "interest_type": "company_shareholding",
+            "entity_name": "Smith Technologies Pty Ltd",
+            "acn": "123456789",
+            "abn": "12123456789",
+            "recipient_mode": "select_beneficiary",
+            "recipient_id": "beneficiary_2"
+          }
+        ]
+      },
+      "exclusion": {
+        "enabled": true,
+        "exclusions": [
+          {
+            "id": "exclusion_0",
+            "person_name": "Thomas Edward Smith",
+            "category": "child",
+            "reasons": ["estrangement"]
+          }
+        ]
+      },
+      "life_sustaining": {
+        "enabled": true,
+        "template": "comfort_and_dignity_prioritised",
+        "values": ["comfort", "dignity", "avoid_burdensome_treatment"]
+      }
+    },
+    "assets": {
+      "real_property": 850000,
+      "bank": 125000,
+      "superannuation": 420000,
+      "investments": 180000,
+      "vehicles": 45000,
+      "business": 350000,
+      "other": 25000
+    },
+    "declarations": {
+      "confirm_reviewed": true,
+      "confirm_complex_advice": true,
+      "confirm_super_and_joint": true,
+      "confirm_signing_witness": true,
+      "intended_signing_date": "2024-02-15"
+    }
+  }'
+
+echo ""
+echo "PDF saved to: Last_Will_and_Testament.pdf"
+echo ""
+
+# ============================================
+# 3. GENERATE WILL (JSON Response)
+# ============================================
+
+echo "=== Generating Will (JSON Response) ==="
+curl -X POST "${BASE_URL}/api/generate" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{
+    "eligibility": {
+      "confirm_age_over_18": true,
+      "confirm_qld": true,
+      "confirm_not_legal_advice": true
+    },
+    "will_maker": {
+      "full_name": "John Michael Smith",
+      "dob": "1980-03-15",
+      "occupation": "Software Engineer",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "john.smith@email.com",
+      "phone": "0412 345 678",
+      "relationship_status": "married"
+    },
+    "partner": {
+      "full_name": "Sarah Jane Smith",
+      "dob": "1982-07-22",
+      "address": {
+        "street": "42 Riverside Drive",
+        "suburb": "Brisbane",
+        "state": "QLD",
+        "postcode": "4000"
+      },
+      "email": "sarah.smith@email.com",
+      "phone": "0413 456 789"
+    },
+    "has_children": true,
+    "children": [
+      {
+        "id": "child_0",
+        "full_name": "Emily Rose Smith",
+        "dob": "2010-05-10",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": true,
+        "special_needs": false
+      },
+      {
+        "id": "child_1",
+        "full_name": "James William Smith",
+        "dob": "2005-11-28",
+        "relationship_type": "biological",
+        "is_expected_to_be_minor_at_death": false,
+        "special_needs": false
+      }
+    ],
+    "dependants": {
+      "has_other_dependants": false,
+      "other_dependants": []
+    },
+    "executors": {
+      "mode": "partner_only",
+      "backup": {
+        "mode": "one",
+        "list": [
+          {
+            "id": "backup_executor_0",
+            "full_name": "Robert Thomas Wilson",
+            "relationship": "Brother-in-law",
+            "address": {
+              "street": "15 Maple Street",
+              "suburb": "Indooroopilly",
+              "state": "QLD",
+              "postcode": "4068"
+            },
+            "phone": "0414 567 890",
+            "email": "rob.wilson@email.com"
+          }
+        ]
+      }
+    },
+    "guardianship": {
+      "appoint_guardian": true,
+      "guardian": {
+        "full_name": "Margaret Anne Wilson",
+        "relationship": "Sister",
+        "address": {
+          "street": "23 Oak Avenue",
+          "suburb": "Paddington",
+          "state": "QLD",
+          "postcode": "4064"
+        },
+        "phone": "0415 678 901"
+      },
+      "backup_guardian": {
+        "full_name": "David Charles Brown",
+        "relationship": "Uncle",
+        "address": {
+          "street": "78 Pine Road",
+          "suburb": "Ashgrove",
+          "state": "QLD",
+          "postcode": "4060"
+        }
+      }
+    },
+    "distribution": {
+      "scheme": "specific_gifts_then_residue"
+    },
+    "beneficiaries": [
+      {
+        "id": "beneficiary_0",
+        "type": "individual",
+        "full_name": "Emily Rose Smith",
+        "relationship": "Daughter",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_cash",
+        "cash_amount": 25000
+      },
+      {
+        "id": "beneficiary_1",
+        "type": "individual",
+        "full_name": "James William Smith",
+        "relationship": "Son",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "specific_item",
+        "item_description": "vintage watch collection"
+      },
+      {
+        "id": "beneficiary_2",
+        "type": "individual",
+        "full_name": "Sarah Jane Smith",
+        "relationship": "Wife",
+        "address": {
+          "street": "42 Riverside Drive",
+          "suburb": "Brisbane",
+          "state": "QLD",
+          "postcode": "4000"
+        },
+        "gift_role": "residue",
+        "residue_share_percent": 100
+      }
+    ],
+    "survivorship": {
+      "days": 30
+    },
+    "substitution": {
+      "rule": "to_their_children"
+    },
+    "minor_trusts": {
+      "enabled": true,
+      "vesting_age": 21,
+      "trustee_mode": "executors_as_trustees"
+    },
+    "toggles": {
+      "funeral": {
+        "enabled": true,
+        "preference": "cremation",
+        "notes": "Simple ceremony with family only"
+      },
+      "digital_assets": {
+        "enabled": true,
+        "authority": true,
+        "categories": ["email", "social_media", "cloud_storage"],
+        "instructions_location": "Password manager under Digital Assets folder"
+      },
+      "pets": {
+        "enabled": true,
+        "count": 2,
+        "summary": "Two golden retrievers named Max and Bella",
+        "care_person_mode": "select_beneficiary",
+        "care_beneficiary_id": "beneficiary_2",
+        "cash_gift": 5000
+      },
+      "business": {
+        "enabled": true,
+        "interests": [
+          {
+            "id": "business_0",
+            "interest_type": "company_shareholding",
+            "entity_name": "Smith Technologies Pty Ltd",
+            "acn": "123456789",
+            "abn": "12123456789",
+            "recipient_mode": "select_beneficiary",
+            "recipient_id": "beneficiary_2"
+          }
+        ]
+      },
+      "exclusion": {
+        "enabled": true,
+        "exclusions": [
+          {
+            "id": "exclusion_0",
+            "person_name": "Thomas Edward Smith",
+            "category": "child",
+            "reasons": ["estrangement"]
+          }
+        ]
+      },
+      "life_sustaining": {
+        "enabled": true,
+        "template": "comfort_and_dignity_prioritised",
+        "values": ["comfort", "dignity", "avoid_burdensome_treatment"]
+      }
+    },
+    "assets": {
+      "real_property": 850000,
+      "bank": 125000,
+      "superannuation": 420000,
+      "investments": 180000,
+      "vehicles": 45000,
+      "business": 350000,
+      "other": 25000
+    },
+    "declarations": {
+      "confirm_reviewed": true,
+      "confirm_complex_advice": true,
+      "confirm_super_and_joint": true,
+      "confirm_signing_witness": true,
+      "intended_signing_date": "2024-02-15"
+    }
+  }'
+
+echo ""
+echo ""
+
+# ============================================
+# 4. VALIDATE INVALID PAYLOAD (Should return errors)
+# ============================================
+
+echo "=== Validating Invalid Payload (Missing Required Fields) ==="
+curl -X POST "${BASE_URL}/api/validate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "will_maker": {
+      "full_name": ""
+    }
+  }'
+
+echo ""
+echo ""
+
+# ============================================
+# 5. SIMPLE VALID PAYLOAD (Single Person, No Children)
+# ============================================
+
+echo "=== Validating Simple Payload ==="
+curl -X POST "${BASE_URL}/api/validate" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "eligibility": {
+      "confirm_age_over_18": true,
+      "confirm_qld": true,
+      "confirm_not_legal_advice": true
+    },
+    "will_maker": {
+      "full_name": "Jane Elizabeth Doe",
+      "dob": "1975-08-20",
+      "occupation": "Teacher",
+      "address": {
+        "street": "15 Park Avenue",
+        "suburb": "South Brisbane",
+        "state": "QLD",
+        "postcode": "4101"
+      },
+      "email": "jane.doe@email.com",
+      "phone": "0422 333 444",
+      "relationship_status": "single"
+    },
+    "has_children": false,
+    "dependants": {
+      "has_other_dependants": false
+    },
+    "executors": {
+      "mode": "one",
+      "primary": [
+        {
+          "full_name": "Mary Elizabeth Doe",
+          "relationship": "Sister",
+          "address": {
+            "street": "25 Park Avenue",
+            "suburb": "South Brisbane",
+            "state": "QLD",
+            "postcode": "4101"
+          }
+        }
+      ],
+      "backup": {
+        "mode": "none"
+      }
+    },
+    "distribution": {
+      "scheme": "percentages_named"
+    },
+    "beneficiaries": [
+      {
+        "type": "individual",
+        "full_name": "Mary Elizabeth Doe",
+        "relationship": "Sister",
+        "address": {
+          "street": "25 Park Avenue",
+          "suburb": "South Brisbane",
+          "state": "QLD",
+          "postcode": "4101"
+        },
+        "gift_role": "percentage_only",
+        "percentage": 100
+      }
+    ],
+    "survivorship": {
+      "days": 30
+    },
+    "substitution": {
+      "rule": "to_their_children"
+    },
+    "declarations": {
+      "confirm_reviewed": true,
+      "confirm_complex_advice": true,
+      "confirm_super_and_joint": true,
+      "confirm_signing_witness": true
+    }
+  }'
+
+echo ""
+echo ""
+echo "=== Done ==="
